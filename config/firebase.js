@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 import {getAuth} from 'firebase/auth';
-import {getFirestore, collection} from 'firebase/firestore'
+import {getFirestore, collection, initializeFirestore} from 'firebase/firestore'
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDvE7u6WAdFoS5s76SWR_DA5F6LW25T_-I",
@@ -15,9 +15,13 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
-export const auth = getAuth(app);
+// export const db = getFirestore(app);
 
+export const db = initializeFirestore(app, {
+  experimentalForceLongPolling: true
+  })
+
+export const auth = getAuth(app);
 
 export const tripsRef = collection(db, 'trips')
 export const expensesRef = collection(db, 'expenses')

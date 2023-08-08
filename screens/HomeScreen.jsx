@@ -1,12 +1,14 @@
 import {View, Text, TouchableOpacity, Image, FlatList} from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ScreenWrapper from '../components/ScreenWrapper';
 import {colors} from '../theme';
 import randomImage from '../assets/images/randomImage';
 import EmptyList from '../components/EmptyList';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import { signOut } from 'firebase/auth';
-import { auth } from '../config/firebase';
+import { auth, tripsRef } from '../config/firebase';
+import { useSelector } from 'react-redux';
+import { getDocs, query, where } from 'firebase/firestore';
 
 const items = [
   {
@@ -51,7 +53,29 @@ const handleLogout = async ()=>{
 }
 
 export default function HomeScreen() {
+  const user = useSelector(state => state?.userSlice?.user);
   const navigation = useNavigation();
+  const [trips, setTrips] = useState([])
+
+  const isFocused = useIsFocused()
+
+  const fetchTrips = async ()=>{
+    const q = query(tripsRef, where("userId", "==", user?.uid))
+    const querySnapshot = await getDocs(q)
+    let data = [];
+    querySnapshot.forEach(doc=>{
+      data.push({...doc.data(), id: doc?.id})
+    })
+    setTrips(data)
+  }
+
+  useEffect(() => {
+   if (isFocused) {
+   fetchTrips()
+   }
+  }, [isFocused])
+  
+
   return (
  
       <View className="flex-1 flex-col gap-3 h-full p-3">
@@ -83,7 +107,7 @@ export default function HomeScreen() {
 
         <View style={{height: 430}}>
           <FlatList
-            data={items}
+            data={trips}
             columnWrapperStyle={{justifyContent: 'space-between'}}
             numColumns={2}
             keyExtractor={item => item.id.toString()}

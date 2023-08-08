@@ -3,8 +3,6 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from '../screens/HomeScreen';
 import AddTrip from '../screens/AddTrip';
-import AddExpense from '../screens/AddExpense';
-import TripExpense from '../screens/TripExpense';
 import WelcomeScreen from '../screens/Welcome';
 import SignIn from '../screens/SignIn';
 import SignUp from '../screens/SignUp';
@@ -12,6 +10,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import { setUser } from '../redux/features/userSlice';
+import TripExpense from '../screens/TripExpense';
+import AddExpense from '../screens/AddExpense';
 
 const Stack = createNativeStackNavigator();
 

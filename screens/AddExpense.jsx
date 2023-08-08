@@ -5,19 +5,41 @@ import ScreenWrapper from '../components/ScreenWrapper';
 import BackButton from '../components/BackButton';
 import {useNavigation} from '@react-navigation/native';
 import {categories} from '../contants';
+import Snackbar from 'react-native-snackbar';
+import {addDoc,} from 'firebase/firestore';
+import Loader from '../components/Loader';
+import { expensesRef } from '../config/firebase';
 
-export default function AddTrip() {
+export default function AddExpense(props) {
+  let {id} = props?.route?.params;
   const navigation = useNavigation();
   const [title, setTitle] = useState('');
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleAddExpense = () => {
+console.log("uju", id)
+  const handleAddExpense = async () => {
     if (title && amount) {
-      navigation.goBack();
+      setLoading(true);
+      let doc = await addDoc(expensesRef, {
+        title,
+        category,
+        amount,
+        tripId: id,
+      });
+      setLoading(false);
+      if (doc && doc?.id) {
+        navigation.goBack();
+      }
     } else {
+      Snackbar.show({
+        text: 'Please fill all the fields',
+        backgroundColor: 'red',
+      });
     }
   };
+
 
   return (
     <ScreenWrapper>
@@ -63,7 +85,7 @@ export default function AddTrip() {
               if (cat.value === category) bgColor = 'bg-green-200';
               return (
                 <TouchableOpacity
-                onPress={()=> setCategory(cat.value)}
+                  onPress={() => setCategory(cat.value)}
                   key={cat.value}
                   className={`rounded-full p-4 ${bgColor}`}>
                   <Text>{cat.title}</Text>
@@ -73,14 +95,20 @@ export default function AddTrip() {
           </View>
         </View>
 
-        <TouchableOpacity
-          onPress={handleAddExpense}
-          style={{backgroundColor: colors.button}}
-          className=" rounded-2xl p-4">
-          <Text className="text-center text-white font-bold text-lg">
-            Add Expense
-          </Text>
-        </TouchableOpacity>
+        <View>
+          {loading ? (
+            <Loader />
+          ) : (
+            <TouchableOpacity
+              onPress={handleAddExpense}
+              style={{backgroundColor: colors.button}}
+              className=" rounded-2xl p-4">
+              <Text className="text-center text-white font-bold text-lg">
+                Add Expense
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     </ScreenWrapper>
   );

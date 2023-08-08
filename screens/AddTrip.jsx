@@ -6,33 +6,34 @@ import BackButton from '../components/BackButton';
 import {useNavigation} from '@react-navigation/native';
 import Loader from '../components/Loader';
 import Snackbar from 'react-native-snackbar';
-import { addDoc } from 'firebase/firestore';
-import { tripsRef } from '../config/firebase';
-import { useSelector } from 'react-redux';
+import {addDoc} from 'firebase/firestore';
+import {tripsRef} from '../config/firebase';
+import {useSelector} from 'react-redux';
 
 export default function AddTrip() {
   const navigation = useNavigation();
-  const user = useSelector(state=> state?.userSlice?.user); 
+  const user = useSelector(state => state?.userSlice?.user);
   const [place, setPlace] = useState('');
-  const [country, setCountry] = useState('');
+  const [state, setstate] = useState('');
   const [loading, setLoading] = useState(false);
 
+ 
   const handleTrip = async () => {
-    if (place && country) {
-      setLoading(true)
+    if (place && state) {
+      setLoading(true);
 
       let doc = await addDoc(tripsRef, {
-        place,
-        country,
-        userId: user?.uid
-      })
-      setLoading(false)
+        place: place,
+        state: state,
+        userId: user?.uid,
+      });
+      setLoading(false);
       if (doc && doc?.id) {
-        navigation.goBack()
+        navigation.goBack();
       }
     } else {
       Snackbar.show({
-        text: "Place and country are required",
+        text: 'Place and state are required',
         backgroundColor: 'red',
       });
     }
@@ -64,12 +65,12 @@ export default function AddTrip() {
             className="p-4 bg-white rounded-2xl mb-3"
           />
           <Text className={`${colors.heading} font-bold text-lg`}>
-            Which Country?
+            Which state?
           </Text>
           <TextInput
-            value={country}
-            placeholder="Enter country"
-            onChangeText={value => setCountry(value)}
+            value={state}
+            placeholder="Enter state"
+            onChangeText={value => setstate(value)}
             className="p-4 bg-white rounded-2xl"
           />
         </View>
