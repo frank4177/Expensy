@@ -105,7 +105,7 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
 
-        <View style={{height: 430}}>
+        <View style={{height: 430, boxSizing:"border-box"}}>
           <FlatList
             data={trips}
             columnWrapperStyle={{justifyContent: 'space-between'}}
@@ -115,7 +115,7 @@ export default function HomeScreen() {
             ListEmptyComponent={<EmptyList message="No trips found :(" />}
             renderItem={({item}) => {
               return (
-                <TouchableOpacity onPress={()=> navigation.navigate("TripExpense", {...item})} className="flex-1 bg-white rounded-2xl p-2  w-[50%] m-2">
+                <TouchableOpacity onPress={()=> navigation.navigate("TripExpense", {...item})} className=" bg-white rounded-2xl p-2 w-[48%] box-border m-1">
                   <View>
                     <Image source={randomImage()} className="w-36 h-36 mb-2" />
                     <Text

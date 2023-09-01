@@ -18,7 +18,6 @@ export default function AddExpense(props) {
   const [category, setCategory] = useState('');
   const [loading, setLoading] = useState(false);
 
-console.log("uju", id)
   const handleAddExpense = async () => {
     if (title && amount) {
       setLoading(true);
