@@ -13,7 +13,7 @@ import { getDocs, query, where } from 'firebase/firestore';
 const items = [
   {
     id: 1,
-    place: 'Karu',
+    place: 'Jikwoyi',
     state: 'Auja',
   },
   {
